@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.entity.User;
+import com.example.demo.vo.request.UserRequesstVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +10,13 @@ import java.util.List;
 @Repository
 public interface UserMapper {
 
-    User getUser(@Param("id") int id);
+    Integer addUser(UserRequesstVO vo);
 
-    List<User> getAllUser();
+    User login(String userNameOrMobile, String password);
 
-    Integer updateUserById(User user);
+    Integer getIdByMobile(String mobile);
+
+    Integer updateUserInfoById(UserRequesstVO vo);
+
+    Integer updatePasswordById(UserRequesstVO vo);
 }

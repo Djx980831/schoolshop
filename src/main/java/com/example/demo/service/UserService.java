@@ -1,14 +1,17 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.User;
 
-import java.util.List;
+import com.example.demo.entity.User;
 
 public interface UserService {
 
-    User getUser(String id);
+    Integer addUser(String userName, String year, String dept, String major, String mobile, String password);
 
-    List<User> getAllUser();
+    User login(String userNameOrMobile, String password);
 
-    Integer updateUserById(String id, String userName, String password, String realName);
+    Integer getIdByMobile(String mobile);
+
+    Integer updateUserInfoById(Integer id, String userName, String year, String dept, String major, String mobile);
+
+    Integer updatePasswordById(Integer id, String password);
 }

@@ -1,9 +1,16 @@
-package com.example.demo.entity;
+package com.example.demo.vo.request;
 
 import lombok.Data;
 
+/**
+ * @param
+ * @Description
+ * @Author dongjingxiong
+ * @return
+ * @Date 2020-04-11 22:31
+ */
 @Data
-public class User {
+public class UserRequesstVO {
     private Integer id;
     private String userName;
     private String year;

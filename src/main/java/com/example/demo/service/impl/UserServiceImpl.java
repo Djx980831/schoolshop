@@ -3,11 +3,11 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.User;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.service.UserService;
-import io.swagger.models.auth.In;
+import com.example.demo.vo.request.UserRequesstVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.servlet.http.HttpSession;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -15,23 +15,58 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+
     @Override
-    public User getUser(String id) {
-        return userMapper.getUser(Integer.valueOf(id));
+    public Integer addUser(String userName, String year, String dept, String major, String mobile, String password) {
+        UserRequesstVO vo = new UserRequesstVO();
+        vo.setUserName(userName);
+        vo.setYear(year);
+        vo.setDept(dept);
+        vo.setMajor(major);
+        vo.setMobile(mobile);
+        vo.setPassword(password);
+
+        userMapper.addUser(vo);
+
+        return vo.getId();
     }
 
     @Override
-    public List<User> getAllUser() {
-       return userMapper.getAllUser();
+    public User login(String userNameOrMobile, String password) {
+
+        User user = userMapper.login(userNameOrMobile, password);
+        if (user == null) {
+            return null;
+        }
+        return user;
     }
 
     @Override
-    public Integer updateUserById(String id, String userName, String password, String realName) {
-        User user = new User();
-        user.setId(Integer.valueOf(id));
-        user.setPassword(password);
-        user.setRealName(realName);
-        user.setUserName(userName);
-        return userMapper.updateUserById(user);
+    public Integer getIdByMobile(String mobile) {
+        return userMapper.getIdByMobile(mobile);
+    }
+
+    @Override
+    public Integer updateUserInfoById(Integer id, String userName, String year, String dept, String major, String mobile) {
+        UserRequesstVO vo = new UserRequesstVO();
+        vo.setUserName(userName);
+        vo.setYear(year);
+        vo.setDept(dept);
+        vo.setMajor(major);
+        vo.setMobile(mobile);
+        vo.setId(id);
+
+        userMapper.updateUserInfoById(vo);
+        return id;
+    }
+
+    @Override
+    public Integer updatePasswordById(Integer id, String password) {
+        UserRequesstVO vo = new UserRequesstVO();
+        vo.setId(id);
+        vo.setPassword(password);
+
+        userMapper.updatePasswordById(vo);
+        return id;
     }
 }
