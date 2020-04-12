@@ -22,28 +22,14 @@ public class ErrorConsant {
 
     public static final ErrorInfo PARAM_ERROR = new ErrorInfo(101, "参数错误");
 
-    public static final ErrorInfo STUDENTID_IS_EXIST = new ErrorInfo(102, "学号已存在，请直接登陆");
+    public static final ErrorInfo USERNAME_OR_PASSWORD_IS_EMPTY = new ErrorInfo(102, "用户名或密码为空");
 
-    public static final ErrorInfo MOBILE_IS_EXIST = new ErrorInfo(103, "手机号已存在，请直接登陆");
+    public static final ErrorInfo USERNAME_OR_PASSWORD_IS_ERROR = new ErrorInfo(103, "用户名或密码不正确");
 
-    public static final ErrorInfo STUDENTID_IS_EMPTY = new ErrorInfo(104, "学号为空");
+    public static final ErrorInfo ID_IS_EMPTY = new ErrorInfo(104, "id不可为空");
 
-    public static final ErrorInfo MOBILE_IS_EMPTY = new ErrorInfo(105, "手机号为空");
+    public static final ErrorInfo USER_NOT_EXIST = new ErrorInfo(105, "用户不存在");
 
-    public static final ErrorInfo STUDENTID_OR_MOBILE_IS_EMPTY = new ErrorInfo(106, "学号或手机号不可为空");
-
-    public static final ErrorInfo PASSWORD_IS_EMPTY = new ErrorInfo(107, "密码不可为空");
-
-    public static final ErrorInfo LOGIN_ERROR = new ErrorInfo(108, "学号、手机号或密码不正确，请重新输入");
-
-    public static final ErrorInfo ANSWER_IS_EMPTY = new ErrorInfo(109, "密保答案为空");
-
-    public static final ErrorInfo STUDENTID_IS_ERROR = new ErrorInfo(110, "学号格式不对，学号以2开头的纯数字组成。");
-
-    public static final ErrorInfo USER_MOBILE_IS_EXIST = new ErrorInfo(111, "手机号已存在，请重新输入。");
-
-    public static final ErrorInfo USER_YANZHENGMA_IS_EMPTY = new ErrorInfo(112, "验证码为空。");
-
-    public static final ErrorInfo USER_YANZHENGMA_IS_ERROR = new ErrorInfo(113, "验证码输入错误。。");
+    public static final ErrorInfo PASSWORD_EMPTY = new ErrorInfo(106, "密码不可为空");
 
 }

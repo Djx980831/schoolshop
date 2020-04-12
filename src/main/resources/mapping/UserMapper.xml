@@ -3,21 +3,17 @@
 <mapper namespace="com.example.demo.mapper.UserMapper">
 
     <insert id="addUser" parameterType="com.example.demo.vo.request.UserRequesstVO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into user values(null, #{userName}, #{year}, #{dept}, #{major}, #{mobile}, md5(#{password}), now(), now())
+        insert into user values(null, #{userName}, #{year}, #{dept}, #{major}, md5(#{password}), now(), now())
     </insert>
     
     <select id="login" resultType="com.example.demo.entity.User">
-        select id, userName, year, dept, major, mobile from user 
+        select id, userName, year, dept, major from user
         where 
-        password = md5(#{password}) and userName = #{userNameOrMobile} or mobile = #{userNameOrMobile} and password = md5(#{password})
-    </select> 
-    
-    <select id="getIdByMobile" resultType="integer">
-        select id from user where mobile = #{mobile}
+        password = md5(#{password}) and userName = #{userName}
     </select>
 
-   <update id="updateUserInfoById" parameterType="com.example.demo.vo.request">
-       update user set userName = #{userName}, year = #{year}, dept = #{dept}, major = #{major}, mobile = #{mobile}, updateTime = now()
+   <update id="updateUserInfoById" parameterType="com.example.demo.vo.request.UserRequesstVO">
+       update user set userName = #{userName}, year = #{year}, dept = #{dept}, major = #{major}, updateTime = now()
        where id = #{id}
    </update>
 
@@ -25,4 +21,8 @@
         update user set password = md5(#{password}), updateTime = now()
         where id = #{id}
     </update>
+
+    <select id="getUserInfoById" resultType="com.example.demo.entity.User">
+        select id, userName, year, dept, major from user where id = #{id}
+    </select>
 </mapper>

@@ -16,6 +16,5 @@ public class UserRequesstVO {
     private String year;
     private String dept;
     private String major;
-    private String mobile;
     private String password;
 }

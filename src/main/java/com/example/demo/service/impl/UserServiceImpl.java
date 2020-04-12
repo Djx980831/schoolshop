@@ -7,7 +7,6 @@ import com.example.demo.vo.request.UserRequesstVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpSession;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -17,13 +16,12 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public Integer addUser(String userName, String year, String dept, String major, String mobile, String password) {
+    public Integer addUser(String userName, String year, String dept, String major, String password) {
         UserRequesstVO vo = new UserRequesstVO();
         vo.setUserName(userName);
         vo.setYear(year);
         vo.setDept(dept);
         vo.setMajor(major);
-        vo.setMobile(mobile);
         vo.setPassword(password);
 
         userMapper.addUser(vo);
@@ -32,9 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User login(String userNameOrMobile, String password) {
+    public User login(String userName, String password) {
 
-        User user = userMapper.login(userNameOrMobile, password);
+        User user = userMapper.login(userName, password);
         if (user == null) {
             return null;
         }
@@ -42,18 +40,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Integer getIdByMobile(String mobile) {
-        return userMapper.getIdByMobile(mobile);
-    }
-
-    @Override
-    public Integer updateUserInfoById(Integer id, String userName, String year, String dept, String major, String mobile) {
+    public Integer updateUserInfoById(Integer id, String userName, String year, String dept, String major) {
         UserRequesstVO vo = new UserRequesstVO();
         vo.setUserName(userName);
         vo.setYear(year);
         vo.setDept(dept);
         vo.setMajor(major);
-        vo.setMobile(mobile);
         vo.setId(id);
 
         userMapper.updateUserInfoById(vo);
@@ -68,5 +60,10 @@ public class UserServiceImpl implements UserService {
 
         userMapper.updatePasswordById(vo);
         return id;
+    }
+
+    @Override
+    public User getUserInfoById(Integer id) {
+        return userMapper.getUserInfoById(id);
     }
 }

@@ -9,6 +9,5 @@ public class User {
     private String year;
     private String dept;
     private String major;
-    private String mobile;
     private String password;
 }

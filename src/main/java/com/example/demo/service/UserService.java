@@ -5,13 +5,13 @@ import com.example.demo.entity.User;
 
 public interface UserService {
 
-    Integer addUser(String userName, String year, String dept, String major, String mobile, String password);
+    Integer addUser(String userName, String year, String dept, String major,  String password);
 
-    User login(String userNameOrMobile, String password);
+    User login(String userName, String password);
 
-    Integer getIdByMobile(String mobile);
-
-    Integer updateUserInfoById(Integer id, String userName, String year, String dept, String major, String mobile);
+    Integer updateUserInfoById(Integer id, String userName, String year, String dept, String major);
 
     Integer updatePasswordById(Integer id, String password);
+
+    User getUserInfoById(Integer id);
 }
