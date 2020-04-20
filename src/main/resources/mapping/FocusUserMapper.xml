@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.FocusUserMapper">
+    
+    <select id="getFocueUserIdByUserId" resultType="integer">
+        select focusUserId from focusUser where userId = #{userId}
+        and flag = 1;
+    </select>
+
+    <insert id="addFocueUser" parameterType="com.example.demo.vo.request.FocusUserRequestVO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into focusUser values (null, #{userId}, #{focusUserId}, 1, now())
+    </insert>
+
+    <update id="deleteFocusUserByUserId" parameterType="com.example.demo.vo.request.FocusUserRequestVO">
+        update focusUser set flag = 0 where userId = #{userId} and focusUserId = #{focusUserId}
+    </update>
+
+</mapper>

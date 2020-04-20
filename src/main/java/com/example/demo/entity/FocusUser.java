@@ -7,12 +7,11 @@ import lombok.Data;
  * @Description TODO
  * @Author dongjingxiong
  * @return
- * @Date 2020-04-13 23:18
+ * @Date 2020-04-20 23:32
  */
 @Data
-public class Goods {
-    Integer id;
-    Integer userId;
-    String title;
-    String comment;
+public class FocusUser {
+    private Integer id;
+    private Integer userId;
+    private Integer focusUserId;
 }

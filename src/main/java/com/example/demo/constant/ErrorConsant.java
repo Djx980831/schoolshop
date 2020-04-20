@@ -32,4 +32,14 @@ public class ErrorConsant {
 
     public static final ErrorInfo PASSWORD_EMPTY = new ErrorInfo(106, "密码不可为空");
 
+    /*
+    goods错误代码
+     */
+    public static final ErrorInfo GOODS_USERID_IS_EMPTY = new ErrorInfo(201, "用户id为空");
+
+    public static final ErrorInfo GOODS_TITLE_IS_EMPTY = new ErrorInfo(202, "标题为空");
+
+    public static final ErrorInfo GOODS_COMMENT_IS_EMPTY = new ErrorInfo(203, "描述为空");
+
+    public static final ErrorInfo GOODS_PIC_IS_EMPTY = new ErrorInfo(204, "选择图片为空");
 }
