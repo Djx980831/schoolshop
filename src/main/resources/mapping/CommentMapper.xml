@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.CommentMapper">
+
+    <insert id="addComment" parameterType="com.example.demo.vo.request.CommentVORequest" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into comment values (null, #{commentUserId}, #{userName}, #{comment}, 1, now(), now())
+    </insert>
+
+    <update id="deleteComment" parameterType="com.example.demo.vo.request.CommentVORequest">
+        update comment set updateTime = now(), flag = 0
+        where id = #{id}
+    </update>
+
+    <select id="getAllComment" parameterType="com.example.demo.vo.request.CommentVORequest" resultType="com.example.demo.entity.Comment">
+        select * from comment where flag = 1
+        limit #{nowPage}, #{pageSize}
+    </select>
+
+    <select id="getCommentById" parameterType="integer" resultType="com.example.demo.entity.Comment">
+        select * from comment where flag = 1 and id = #{id}
+    </select>
+
+    <select id="getCount" resultType="integer">
+        select count(*) from comment where flag = 1
+    </select>
+</mapper>
