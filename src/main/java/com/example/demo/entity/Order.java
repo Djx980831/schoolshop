@@ -1,23 +1,21 @@
-package com.example.demo.vo.response;
+package com.example.demo.entity;
 
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * @param
  * @Description TODO
  * @Author dongjingxiong
  * @return
- * @Date 2020-04-19 23:35
+ * @Date 2020-05-05 11:34
  */
 @Data
-public class GoodsVO {
+public class Order {
     private Integer id;
     private Integer userId;
+    private Integer goodsId;
+    private Double money;
     private String title;
     private String comment;
-    private Double money;
-    private Integer isCollection;
-    private List<String> pathList;
+    private Integer flag;
 }

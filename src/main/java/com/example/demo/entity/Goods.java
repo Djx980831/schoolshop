@@ -15,4 +15,5 @@ public class Goods {
     Integer userId;
     String title;
     String comment;
+    Double money;
 }

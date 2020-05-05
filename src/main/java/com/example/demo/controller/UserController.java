@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import static com.example.demo.constant.ErrorConsant.*;
@@ -35,7 +36,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public RpcResponse<User> login(String userName, String password, HttpSession session) {
+    public RpcResponse<User> login(String userName, String password, HttpSession session, HttpServletResponse response) {
         if (!ParamUtil.checkString(userName, password)) {
             return RpcResponse.error(USERNAME_OR_PASSWORD_IS_EMPTY);
         }
@@ -44,7 +45,17 @@ public class UserController {
             return RpcResponse.error(USERNAME_OR_PASSWORD_IS_ERROR);
         }
         session.setAttribute("user", user);
-        Cookie id = new Cookie("id", user.getId().toString());
+
+        Cookie userId = new Cookie("userId", user.getId().toString());
+        userId.setPath("/");
+        userId.setMaxAge(24 * 60 * 60);
+        response.addCookie(userId);
+
+        Cookie name = new Cookie("userName", user.getId().toString());
+        name.setPath("/");
+        name.setMaxAge(24 * 60 * 60);
+        response.addCookie(name);
+
         return RpcResponse.success(user);
     }
 
@@ -84,5 +95,23 @@ public class UserController {
         }
 
         return RpcResponse.success(service.updatePasswordById(id, password));
+    }
+
+    @PostMapping("/logout")
+    public RpcResponse<Integer> logout(HttpSession session, HttpServletResponse response){
+        User user = (User) session.getAttribute("user");
+        session.invalidate();
+
+        Cookie userId = new Cookie("userId", user.getId().toString());
+        userId.setPath("/");
+        userId.setMaxAge(0);
+        response.addCookie(userId);
+
+        Cookie name = new Cookie("userName", user.getId().toString());
+        name.setPath("/");
+        name.setMaxAge(0);
+        response.addCookie(name);
+
+        return RpcResponse.success(user.getId());
     }
 }

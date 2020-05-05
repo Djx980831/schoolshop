@@ -20,4 +20,16 @@ public interface GoodsMapper {
     List<Pic> getPicByIds(List<Integer> userIds);
 
     List<Goods> getFocusUserGoodsByUserId(List<Integer> userIds);
+
+    Goods getGoodsInfoById(Integer id);
+
+    Integer deleteGoodsById(Integer id);
+
+    List<String> getPicPathByGoodsId(Integer goodsId);
+
+    List<Goods> getXiaJiaGoodsByUserId(Integer userId);
+
+    List<Goods> getGoodsByUserId(Integer userId);
+
+    Integer isCollection(Integer userId, Integer goodsId);
 }

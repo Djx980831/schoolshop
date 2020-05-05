@@ -9,7 +9,7 @@ public interface UserMapper {
 
     Integer addUser(UserRequesstVO vo);
 
-    User login(String userNameOrMobile, String password);
+    User login(String userName, String password);
 
     Integer updateUserInfoById(UserRequesstVO vo);
 

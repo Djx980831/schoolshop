@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.CollectionMapper">
+
+    <insert id="addCollection" parameterType="com.example.demo.vo.request.CollectionRequestVO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        insert into collection values (null, #{userId}, #{goodsId}, now())
+    </insert>
+
+    <delete id="deleteCollectionById" parameterType="integer">
+        delete from collection where id = #{id}
+    </delete>
+
+    <select id="getCollectionByUserId" resultType="com.example.demo.entity.Collectioner">
+        select id, userId, goodsId from collection where userId = #{userId}
+    </select>
+
+    <select id="getCollectionCountByUserId" resultType="integer">
+        select count(*) from collection where userId = #{userId}
+    </select>
+</mapper>

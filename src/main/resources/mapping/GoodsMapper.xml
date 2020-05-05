@@ -3,32 +3,57 @@
 <mapper namespace="com.example.demo.mapper.GoodsMapper">
 
     <insert id="savePic" parameterType="com.example.demo.vo.request.PicRequestVO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into pic values(null, #{userId}, #{path}, now())
+        insert into pic values(null, #{goodsId}, #{userId}, #{path}, now())
     </insert>
 
     <insert id="saveGoods" useGeneratedKeys="true" parameterType="com.example.demo.vo.request.GoodsRequestVO" keyColumn="id" keyProperty="id">
-        insert into goods values (null, #{userId}, #{title}, #{comment}, now(), now())
+        insert into goods values (null, #{userId}, #{title}, #{comment}, #{money}, 1, now(), now())
     </insert>
 
     <select id="getGoodsByLikeTitle" resultType="com.example.demo.entity.Goods">
-        select id, userId, title, comment from goods where title like concat ('%', #{title}, '%')
+        select id, userId, title, comment, money from goods where title like concat ('%', #{title}, '%')
         order by createTime desc
     </select>
 
     <select id="getPicByIds" resultType="com.example.demo.entity.Pic">
-        select id, userId, path from pic
+        select id, goodsId, path from pic
         where userId in
-        <foreach  item="ids" collection="list" index="index"  open="(" separator="," close=")">
+        <foreach  item="userIds" collection="list" index="index"  open="(" separator="," close=")">
             #{userIds}
         </foreach>
     </select>
 
     <select id="getFocusUserGoodsByUserId" resultType="com.example.demo.entity.Goods">
-        select id, userId, title, comment from goods
+        select id, userId, title, comment, money from goods
         where userId in
-        <foreach  item="ids" collection="list" index="index"  open="(" separator="," close=")">
+        <foreach  item="userIds" collection="list" index="index"  open="(" separator="," close=")">
             #{userIds}
         </foreach>
         order by createTime desc
+    </select>
+
+    <update id="deleteGoodsById" parameterType="integer">
+        update goods set flag = 0, updateTime = now()
+        where id = #{id}
+    </update>
+    
+    <select id="getXiaJiaGoodsByUserId" resultType="com.example.demo.entity.Goods">
+        select * from goods where flag = 0 and userId = #{userId}
+    </select>
+
+    <select id="getGoodsByUserId" resultType="com.example.demo.entity.Goods">
+        select * from goods where flag = 1 and userId = #{userId}
+    </select>
+
+    <select id="getGoodsInfoById" resultType="com.example.demo.entity.Goods">
+        select * from goods where id = #{id}
+    </select>
+
+    <select id="getPicPathByGoodsId" resultType="string">
+        select path from pic where goodsId = #{goodsId}
+    </select>
+
+    <select id="isCollection" parameterType="integer" resultType="java.lang.Integer">
+        select id from collection where goodsId = #{goodsId} and userId = #{userId}
     </select>
 </mapper>

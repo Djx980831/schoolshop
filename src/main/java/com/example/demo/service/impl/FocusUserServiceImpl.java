@@ -39,11 +39,21 @@ public class FocusUserServiceImpl implements FocusUserService {
     }
 
     @Override
-    public void deleteFocusUserByUserId(Integer userId, Integer focusUserId) {
+    public Integer deleteFocusUserById(Integer id) {
         FocusUserRequestVO vo = new FocusUserRequestVO();
-        vo.setUserId(userId);
-        vo.setFocusUserId(focusUserId);
+        vo.setUserId(id);
 
-        mapper.deleteFocusUserByUserId(vo);
+        mapper.deleteFocusUserById(vo);
+        return id;
+    }
+
+    @Override
+    public Integer getFocusUserCountByUserId(Integer userId) {
+        return mapper.getFocusUserCountByUserId(userId);
+    }
+
+    @Override
+    public Integer getFensiCountByUserId(Integer userId) {
+        return mapper.getFensiCountByUserId(userId);
     }
 }

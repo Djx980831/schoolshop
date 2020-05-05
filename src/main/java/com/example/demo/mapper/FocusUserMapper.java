@@ -11,5 +11,9 @@ public interface FocusUserMapper {
 
     Integer addFocueUser(FocusUserRequestVO vo);
 
-    void deleteFocusUserByUserId(FocusUserRequestVO vo);
+    void deleteFocusUserById(FocusUserRequestVO vo);
+
+    Integer getFocusUserCountByUserId(Integer userId);
+
+    Integer getFensiCountByUserId(Integer userId);
 }

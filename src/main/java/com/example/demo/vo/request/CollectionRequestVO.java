@@ -7,14 +7,11 @@ import lombok.Data;
  * @Description TODO
  * @Author dongjingxiong
  * @return
- * @Date 2020-04-19 23:17
+ * @Date 2020-05-05 10:42
  */
 @Data
-public class GoodsRequestVO {
+public class CollectionRequestVO {
     private Integer id;
     private Integer userId;
-    private String title;
-    private Integer flag;
-    private String comment;
-    private Double money;
+    private Integer goodsId;
 }

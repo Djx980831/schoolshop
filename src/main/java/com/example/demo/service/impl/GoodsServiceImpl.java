@@ -1,15 +1,18 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Goods;
+import com.example.demo.entity.Order;
 import com.example.demo.entity.Pic;
-import com.example.demo.mapper.FocusUserMapper;
 import com.example.demo.mapper.GoodsMapper;
+import com.example.demo.service.CollectionService;
 import com.example.demo.service.FocusUserService;
 import com.example.demo.service.GoodsService;
+import com.example.demo.service.OrderService;
 import com.example.demo.util.FileUtil;
 import com.example.demo.vo.request.GoodsRequestVO;
 import com.example.demo.vo.request.PicRequestVO;
 import com.example.demo.vo.response.GoodsVO;
+import com.example.demo.vo.response.MainVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
@@ -38,8 +41,14 @@ public class GoodsServiceImpl implements GoodsService {
     @Autowired
     private FocusUserService focusUserService;
 
+    @Autowired
+    private CollectionService collectionService;
+
+    @Autowired
+    private OrderService orderService;
+
     @Override
-    public String savePic(Integer userId, MultipartFile[] files) {
+    public String savePic(Integer goodsId, Integer userId, MultipartFile[] files) {
         if (files.length != 0) {
             for (MultipartFile multipartFile : files) {
                 String fileName = multipartFile.getOriginalFilename();
@@ -57,8 +66,9 @@ public class GoodsServiceImpl implements GoodsService {
 
                 // 接着创建对应的实体类，将以下路径进行添加，然后通过数据库操作方法写入
                 PicRequestVO vo = new PicRequestVO();
+                vo.setGoodsId(goodsId);
                 vo.setUserId(userId);
-                vo.setPath("http://localhost:8080/" + fileName);
+                vo.setPath("http://localhost:8082/" + fileName);
                 mapper.savePic(vo);
             }
         }
@@ -66,11 +76,12 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
-    public Integer saveGoods(Integer userId, String title, String comment) {
+    public Integer saveGoods(Integer userId, String title, String comment, Double money) {
         GoodsRequestVO vo = new GoodsRequestVO();
         vo.setUserId(userId);
         vo.setTitle(title);
         vo.setComment(comment);
+        vo.setMoney(money);
 
         mapper.saveGoods(vo);
         return vo.getId();
@@ -79,8 +90,8 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public List<GoodsVO> getGoodsByLikeTitle(String title) {
         List<Goods> goodsList = mapper.getGoodsByLikeTitle(title);
-        List<Integer> userIdsList = goodsList.stream().map(goods -> goods.getUserId()).collect(Collectors.toList());
-        List<Pic> pathList = mapper.getPicByIds(userIdsList);
+        List<Integer> userIds = goodsList.stream().map(goods -> goods.getUserId()).collect(Collectors.toList());
+        List<Pic> pathList = mapper.getPicByIds(userIds);
 
         //list 转为 map 对象
         Map<Integer, List<String>> map = listToMap(pathList);
@@ -88,11 +99,14 @@ public class GoodsServiceImpl implements GoodsService {
         List<GoodsVO> goodsVOList = new ArrayList<>(20);
         for (Goods goods : goodsList) {
             GoodsVO vo = new GoodsVO();
+            Integer isCollection = mapper.isCollection(goods.getUserId(), goods.getId());
+            vo.setIsCollection(isCollection != null ? 1 : 0);
             vo.setId(goods.getId());
             vo.setUserId(goods.getUserId());
             vo.setTitle(goods.getTitle());
             vo.setComment(goods.getComment());
-            vo.setPathList(map.get(goods.getUserId()));
+            vo.setPathList(map.get(goods.getId()));
+            vo.setMoney(goods.getMoney());
 
             goodsVOList.add(vo);
         }
@@ -114,6 +128,7 @@ public class GoodsServiceImpl implements GoodsService {
             vo.setUserId(goods.getUserId());
             vo.setTitle(goods.getTitle());
             vo.setComment(goods.getComment());
+            vo.setMoney(goods.getMoney());
             vo.setPathList(map.get(goods.getUserId()));
 
             goodsVOList.add(vo);
@@ -121,17 +136,132 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsVOList;
     }
 
+    @Override
+    public GoodsVO getGoodsInfoById(Integer id) {
+        Goods goods = mapper.getGoodsInfoById(id);
+        if (goods == null) {
+            return null;
+        }
+        List<String> picList = mapper.getPicPathByGoodsId(id);
+        Integer isCollection = mapper.isCollection(goods.getUserId(), id);
+        GoodsVO goodsVO = new GoodsVO();
+        goodsVO.setPathList(picList);
+        goodsVO.setId(id);
+        goodsVO.setComment(goods.getComment());
+        goodsVO.setTitle(goods.getTitle());
+        goodsVO.setUserId(goods.getUserId());
+        goodsVO.setMoney(goods.getMoney());
+        if (isCollection != null) {
+            goodsVO.setIsCollection(1);
+        } else {
+            goodsVO.setIsCollection(0);
+        }
+
+        return goodsVO;
+    }
+
+    @Override
+    public MainVO getMainInfoByUserId(Integer userId) {
+        MainVO mainVO = new MainVO();
+
+        Integer focue = focusUserService.getFocusUserCountByUserId(userId);
+        Integer fenSi = focusUserService.getFensiCountByUserId(userId);
+        Integer collection = collectionService.getCollectionCountByUserId(userId);
+
+        List<Goods> goodsList = mapper.getGoodsByUserId(userId);
+        List<Goods> xiaJiaGoodsList = mapper.getXiaJiaGoodsByUserId(userId);
+        List<Order> orderList = orderService.getOrderByUserId(userId);
+
+        mainVO.setFenSi(fenSi);
+        mainVO.setFocue(focue);
+        mainVO.setCollection(collection);
+        mainVO.setGoodsList(goodsList);
+        mainVO.setXiaJiaGoodsList(xiaJiaGoodsList);
+        mainVO.setOrderList(orderList);
+
+        return mainVO;
+    }
+
+    @Override
+    public List<GoodsVO> getXiaJiaGoodsByUserId(Integer userId) {
+        List<Goods> xiaJiaGoodsList = mapper.getXiaJiaGoodsByUserId(userId);
+        if (xiaJiaGoodsList == null) {
+            return null;
+        }
+        List<Integer> userIds = xiaJiaGoodsList.stream().map(goods -> goods.getUserId()).collect(Collectors.toList());
+        List<Pic> pathList = mapper.getPicByIds(userIds);
+
+        //list 转为 map 对象
+        Map<Integer, List<String>> map = listToMap(pathList);
+
+        List<GoodsVO> goodsVOList = new ArrayList<>(20);
+
+        for (Goods goods : xiaJiaGoodsList) {
+            GoodsVO vo = new GoodsVO();
+            Integer isCollection = mapper.isCollection(goods.getUserId(), goods.getId());
+            vo.setIsCollection(isCollection != null ? 1 : 0);
+            vo.setId(goods.getId());
+            vo.setUserId(goods.getUserId());
+            vo.setTitle(goods.getTitle());
+            vo.setComment(goods.getComment());
+            vo.setPathList(map.get(goods.getId()));
+            vo.setMoney(goods.getMoney());
+
+            goodsVOList.add(vo);
+        }
+        return goodsVOList;
+    }
+
+    @Override
+    public List<GoodsVO> getGoodsByUserId(Integer userId) {
+        List<Goods> goodsList = mapper.getGoodsByUserId(userId);
+        if (goodsList == null) {
+            return null;
+        }
+        List<Integer> userIds = goodsList.stream().map(goods -> goods.getUserId()).collect(Collectors.toList());
+        List<Pic> pathList = mapper.getPicByIds(userIds);
+
+        //list 转为 map 对象
+        Map<Integer, List<String>> map = listToMap(pathList);
+
+        List<GoodsVO> goodsVOList = new ArrayList<>(20);
+
+        for (Goods goods : goodsList) {
+            GoodsVO vo = new GoodsVO();
+            Integer isCollection = mapper.isCollection(goods.getUserId(), goods.getId());
+            vo.setIsCollection(isCollection != null ? 1 : 0);
+            vo.setId(goods.getId());
+            vo.setUserId(goods.getUserId());
+            vo.setTitle(goods.getTitle());
+            vo.setComment(goods.getComment());
+            vo.setPathList(map.get(goods.getId()));
+            vo.setMoney(goods.getMoney());
+
+            goodsVOList.add(vo);
+        }
+        return goodsVOList;
+    }
+
+    @Override
+    public Integer deleteGoodsById(Integer id) {
+        return mapper.deleteGoodsById(id);
+    }
+
     private Map listToMap(List<Pic> pathList) {
         Map<Integer, List<String>> map = new HashMap<>();
-        for (int i = 0; i < pathList.size(); i++) {
+        for (int i = pathList.size() - 1; i >= 0; i--) {
             List<String> stringList = new ArrayList<>();
             Pic pic = pathList.get(i);
-            for (int j = i + 1; j < pathList.size(); j++) {
-                if (pic.getUserId().equals(pathList.get(j).getUserId())) {
+            stringList.add(pic.getPath());
+            for (int j = i - 1; j >= 0; j--) {
+                if (pic.getGoodsId().equals(pathList.get(j).getGoodsId())) {
                     stringList.add(pathList.get(j).getPath());
+                    pathList.remove(j);
                 }
             }
-            map.put(pic.getUserId(), stringList);
+            if (!map.containsKey(pic.getGoodsId())) {
+                map.put(pic.getGoodsId(), stringList);
+            }
         }
         return map;
     }

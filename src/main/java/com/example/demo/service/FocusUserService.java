@@ -8,5 +8,9 @@ public interface FocusUserService {
 
     Integer addFocueUser(Integer userId, Integer focusUserId);
 
-    void deleteFocusUserByUserId(Integer userId, Integer focusUserId);
+    Integer deleteFocusUserById(Integer id);
+
+    Integer getFocusUserCountByUserId(Integer userId);
+
+    Integer getFensiCountByUserId(Integer userId);
 }

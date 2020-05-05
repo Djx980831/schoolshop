@@ -11,8 +11,15 @@
         insert into focusUser values (null, #{userId}, #{focusUserId}, 1, now())
     </insert>
 
-    <update id="deleteFocusUserByUserId" parameterType="com.example.demo.vo.request.FocusUserRequestVO">
-        update focusUser set flag = 0 where userId = #{userId} and focusUserId = #{focusUserId}
+    <update id="deleteFocusUserById" parameterType="com.example.demo.vo.request.FocusUserRequestVO">
+        update focusUser set flag = 0 where id = #{id}
     </update>
 
+    <select id="getFocusUserCountByUserId" resultType="integer">
+        select count(*) from focusUser where flag = 1 and userId = #{userId}
+    </select>
+
+    <select id="getFensiCountByUserId" resultType="integer">
+        select count(*) from focusUser where flag = 1 and focusUserId = #{userId}
+    </select>
 </mapper>

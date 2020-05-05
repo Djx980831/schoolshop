@@ -3,13 +3,13 @@
 <mapper namespace="com.example.demo.mapper.UserMapper">
 
     <insert id="addUser" parameterType="com.example.demo.vo.request.UserRequesstVO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into user values(null, #{userName}, #{year}, #{dept}, #{major}, md5(#{password}), now(), now())
+        insert into user values(null, #{userName}, #{year}, #{dept}, #{major}, #{password}, now(), now())
     </insert>
     
     <select id="login" resultType="com.example.demo.entity.User">
         select id, userName, year, dept, major from user
         where 
-        password = md5(#{password}) and userName = #{userName}
+        password = #{password} and userName = #{userName}
     </select>
 
    <update id="updateUserInfoById" parameterType="com.example.demo.vo.request.UserRequesstVO">
@@ -18,11 +18,11 @@
    </update>
 
     <update id="updatePasswordById" parameterType="com.example.demo.vo.request.UserRequesstVO">
-        update user set password = md5(#{password}), updateTime = now()
+        update user set password = #{password}, updateTime = now()
         where id = #{id}
     </update>
 
     <select id="getUserInfoById" resultType="com.example.demo.entity.User">
-        select id, userName, year, dept, major from user where id = #{id}
+        select id, userName, year, dept, major, password from user where id = #{id}
     </select>
 </mapper>

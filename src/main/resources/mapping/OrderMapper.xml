@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.mapper.OrderMapper">
+
+    <insert id="addOrder" parameterType="com.example.demo.entity.Order" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into order values (null, #{userId}, #{goodsId}, #{money}, #{title}, #{comment}, 1, now(), now())
+    </insert>
+
+    <select id="getOrderByUserId" resultType="com.example.demo.entity.Order">
+        select * from order where userId = #{userId} and flag = 2
+    </select>
+
+    <update id="updateOrderById" parameterType="integer">
+        update order set flag = 0, updateTime = now() where id = #{id}
+    </update>
+</mapper>

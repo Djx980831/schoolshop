@@ -1,7 +1,6 @@
 package com.example.demo.vo.request;
 
 import lombok.Data;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @param
@@ -13,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 public class PicRequestVO {
     Integer id;
+    Integer goodsId;
     Integer userId;
     String path;
 }
