@@ -4,6 +4,7 @@ import com.example.demo.entity.Collectioner;
 import com.example.demo.service.CollectionService;
 import com.example.demo.util.ParamUtil;
 import com.example.demo.util.RpcResponse;
+import com.example.demo.vo.response.CollectionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class CollectionController {
     private CollectionService service;
 
     @PostMapping("/addCollection")
-    public RpcResponse<Integer> addCollection(Integer userId, Integer goodsId) {
+    public RpcResponse<Integer> addCollection(Integer userId, Integer goodsId, String title, String comment, Double money) {
         if (!ParamUtil.checkNumbers(userId)) {
             return RpcResponse.error(GOODS_USERID_IS_EMPTY);
         }
@@ -36,7 +37,7 @@ public class CollectionController {
             return RpcResponse.error(GOODS_GOODSID_IS_EMPTY);
         }
 
-        return RpcResponse.success(service.addCollection(userId, goodsId));
+        return RpcResponse.success(service.addCollection(userId, goodsId, title, comment, money));
     }
 
     @PostMapping("/deleteCollectionById")
@@ -49,7 +50,7 @@ public class CollectionController {
     }
 
     @PostMapping("/getCollectionByUserId")
-    public RpcResponse<List<Collectioner>> getCollectionByUserId(Integer userId) {
+    public RpcResponse<List<CollectionVO>> getCollectionByUserId(Integer userId) {
         if (!ParamUtil.checkNumbers(userId)) {
             return RpcResponse.error(GOODS_USERID_IS_EMPTY);
         }

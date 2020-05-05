@@ -14,4 +14,7 @@ public class Collectioner {
     private Integer id;
     private Integer userId;
     private Integer goodsId;
+    private String title;
+    private String comment;
+    private Double money;
 }

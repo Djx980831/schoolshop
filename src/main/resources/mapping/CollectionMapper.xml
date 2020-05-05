@@ -3,7 +3,7 @@
 <mapper namespace="com.example.demo.mapper.CollectionMapper">
 
     <insert id="addCollection" parameterType="com.example.demo.vo.request.CollectionRequestVO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
-        insert into collection values (null, #{userId}, #{goodsId}, now())
+        insert into collection values (null, #{userId}, #{goodsId}, #{title}, #{comment}, #{money}, now())
     </insert>
 
     <delete id="deleteCollectionById" parameterType="integer">
@@ -11,7 +11,7 @@
     </delete>
 
     <select id="getCollectionByUserId" resultType="com.example.demo.entity.Collectioner">
-        select id, userId, goodsId from collection where userId = #{userId}
+        select * from collection where userId = #{userId}
     </select>
 
     <select id="getCollectionCountByUserId" resultType="integer">
