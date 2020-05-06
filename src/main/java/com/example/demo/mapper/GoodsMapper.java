@@ -32,4 +32,6 @@ public interface GoodsMapper {
     List<Goods> getGoodsByUserId(Integer userId);
 
     Integer isCollection(Integer userId, Integer goodsId);
+
+    List<Pic> getPicPathByGoodsIds(List<Integer> goodsIds);
 }

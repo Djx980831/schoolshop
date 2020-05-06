@@ -10,7 +10,7 @@ import lombok.Data;
  * @Date 2020-05-05 11:34
  */
 @Data
-public class Order {
+public class Orders {
     private Integer id;
     private Integer userId;
     private Integer goodsId;

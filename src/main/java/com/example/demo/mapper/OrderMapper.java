@@ -1,6 +1,6 @@
 package com.example.demo.mapper;
 
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import com.example.demo.vo.request.OrderRequestVO;
 import org.springframework.stereotype.Repository;
 
@@ -11,7 +11,7 @@ public interface OrderMapper {
 
     Integer addOrder(OrderRequestVO vo);
 
-    List<Order> getOrderByUserId(Integer userId);
+    List<Orders> getOrderByUserId(Integer userId);
 
-    Integer updateOrderById(Integer userId, Integer flag);
+    Integer updateOrderById(Integer id, Integer flag);
 }

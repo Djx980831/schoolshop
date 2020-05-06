@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import com.example.demo.service.OrderService;
 import com.example.demo.util.ParamUtil;
 import com.example.demo.util.RpcResponse;
@@ -49,7 +49,7 @@ public class OrderController {
     }
 
     @PostMapping("/getOrderByUserId")
-    public RpcResponse<List<Order>> getOrderByUserId(Integer userId) {
+    public RpcResponse<List<Orders>> getOrderByUserId(Integer userId) {
         if (!ParamUtil.checkNumbers(userId)) {
             return RpcResponse.error(GOODS_USERID_IS_EMPTY);
         }
@@ -58,11 +58,11 @@ public class OrderController {
     }
 
     @PostMapping("/updateOrderById")
-    public RpcResponse<Integer> updateOrderById(Integer userId, Integer flag) {
-        if (!ParamUtil.checkNumbers(userId)) {
+    public RpcResponse<Integer> updateOrderById(Integer id, Integer flag) {
+        if (!ParamUtil.checkNumbers(id)) {
             return RpcResponse.error(GOODS_USERID_IS_EMPTY);
         }
 
-        return RpcResponse.success(service.updateOrderById(userId, flag));
+        return RpcResponse.success(service.updateOrderById(id, flag));
     }
 }

@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Goods;
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import com.example.demo.entity.Pic;
 import com.example.demo.mapper.GoodsMapper;
 import com.example.demo.service.CollectionService;
@@ -13,6 +13,7 @@ import com.example.demo.vo.request.GoodsRequestVO;
 import com.example.demo.vo.request.PicRequestVO;
 import com.example.demo.vo.response.GoodsVO;
 import com.example.demo.vo.response.MainVO;
+import com.example.demo.vo.response.OrdersVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
@@ -124,12 +125,14 @@ public class GoodsServiceImpl implements GoodsService {
         List<GoodsVO> goodsVOList = new ArrayList<>(20);
         for (Goods goods : goodsList) {
             GoodsVO vo = new GoodsVO();
+            Integer isCollection = mapper.isCollection(goods.getUserId(), goods.getId());
+            vo.setIsCollection(isCollection != null ? 1 : 0);
             vo.setId(goods.getId());
             vo.setUserId(goods.getUserId());
             vo.setTitle(goods.getTitle());
             vo.setComment(goods.getComment());
             vo.setMoney(goods.getMoney());
-            vo.setPathList(map.get(goods.getUserId()));
+            vo.setPathList(map.get(goods.getId()));
 
             goodsVOList.add(vo);
         }
@@ -168,16 +171,56 @@ public class GoodsServiceImpl implements GoodsService {
         Integer fenSi = focusUserService.getFensiCountByUserId(userId);
         Integer collection = collectionService.getCollectionCountByUserId(userId);
 
+        //上架商品
+        List<GoodsVO> goodsVOList = new ArrayList<>(20);
         List<Goods> goodsList = mapper.getGoodsByUserId(userId);
+        if (goodsList.size() != 0) {
+            List<Integer> goodsIds = goodsList.stream().map(goods -> goods.getId()).collect(Collectors.toList());
+            List<Pic> stringGoodsList = mapper.getPicPathByGoodsIds(goodsIds);
+            Map<Integer, List<String>> goodsStringMap = listToMap(stringGoodsList);
+            goodsVOList = toGoodsList(goodsList, goodsStringMap);
+        }
+
+        //下架商品
+        List<GoodsVO> xiaJIaGoodsVOList = new ArrayList<>(20);
         List<Goods> xiaJiaGoodsList = mapper.getXiaJiaGoodsByUserId(userId);
-        List<Order> orderList = orderService.getOrderByUserId(userId);
+        if (xiaJiaGoodsList.size() != 0) {
+            List<Integer> xiaJiaGoodsIds = xiaJiaGoodsList.stream().map(goods -> goods.getId()).collect(Collectors.toList());
+            List<Pic> stringXiaJiaGoodsList = mapper.getPicPathByGoodsIds(xiaJiaGoodsIds);
+            Map<Integer, List<String>> stringXiaJiaGoodsMap = listToMap(stringXiaJiaGoodsList);
+            xiaJIaGoodsVOList = toGoodsList(xiaJiaGoodsList, stringXiaJiaGoodsMap);
+        }
+
+
+        //订单信息
+        List<OrdersVO> ordersVOList = new ArrayList<>(20);
+        List<Orders> orderList = orderService.getOrderByUserId(userId);
+        if (orderList.size() != 0) {
+            List<Integer> orderGoodsIds = orderList.stream().map(order -> order.getGoodsId()).collect(Collectors.toList());
+            List<Pic> stringOrderGoodsList = mapper.getPicPathByGoodsIds(orderGoodsIds);
+            Map<Integer, List<String>> stringOrderGoodsMap = listToMap(stringOrderGoodsList);
+            ordersVOList = new ArrayList<>(20);
+            for (Orders orders : orderList) {
+                OrdersVO vo = new OrdersVO();
+                vo.setId(orders.getId());
+                vo.setUserId(orders.getUserId());
+                vo.setComment(orders.getComment());
+                vo.setFlag(orders.getFlag());
+                vo.setTitle(orders.getTitle());
+                vo.setGoodsId(orders.getGoodsId());
+                vo.setMoney(orders.getMoney());
+                vo.setPathList(stringOrderGoodsMap.get(orders.getGoodsId()));
+
+                ordersVOList.add(vo);
+            }
+        }
 
         mainVO.setFenSi(fenSi);
         mainVO.setFocue(focue);
         mainVO.setCollection(collection);
-        mainVO.setGoodsList(goodsList);
-        mainVO.setXiaJiaGoodsList(xiaJiaGoodsList);
-        mainVO.setOrderList(orderList);
+        mainVO.setGoodsList(goodsVOList);
+        mainVO.setXiaJiaGoodsList(xiaJIaGoodsVOList);
+        mainVO.setOrderList(ordersVOList);
 
         return mainVO;
     }
@@ -264,5 +307,24 @@ public class GoodsServiceImpl implements GoodsService {
             }
         }
         return map;
+    }
+
+    private List<GoodsVO> toGoodsList(List<Goods> goodsList,  Map<Integer, List<String>> goodsStringMap) {
+        List<GoodsVO> goodsVOList = new ArrayList<>(20);
+
+        for (Goods goods : goodsList) {
+            GoodsVO vo = new GoodsVO();
+            Integer isCollection = mapper.isCollection(goods.getUserId(), goods.getId());
+            vo.setIsCollection(isCollection != null ? 1 : 0);
+            vo.setMoney(goods.getMoney());
+            vo.setUserId(goods.getUserId());
+            vo.setTitle(goods.getTitle());
+            vo.setComment(goods.getComment());
+            vo.setId(goods.getId());
+            vo.setPathList(goodsStringMap.get(goods.getId()));
+
+            goodsVOList.add(vo);
+        }
+        return goodsVOList;
     }
 }

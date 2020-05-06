@@ -85,6 +85,7 @@ public class ErrorConsant {
 
     public static final ErrorInfo ORDER_MONEY_IS_EMPTY = new ErrorInfo(601, "价格为空");
 
+    public static final ErrorInfo ORDER_ID_IS_EMPTY = new ErrorInfo(602, "id为空");
 
     /*
     回复错误代码

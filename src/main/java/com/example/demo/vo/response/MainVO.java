@@ -1,7 +1,7 @@
 package com.example.demo.vo.response;
 
 import com.example.demo.entity.Goods;
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import lombok.Data;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class MainVO {
     private Integer fenSi;
     private Integer collection;
 
-    private List<Goods> GoodsList;
-    private List<Goods> xiaJiaGoodsList;
-    private List<Order> orderList;
+    private List<GoodsVO> GoodsList;
+    private List<GoodsVO> xiaJiaGoodsList;
+    private List<OrdersVO> orderList;
 }

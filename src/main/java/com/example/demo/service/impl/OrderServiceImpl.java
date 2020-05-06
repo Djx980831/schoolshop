@@ -1,6 +1,6 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Order;
+import com.example.demo.entity.Orders;
 import com.example.demo.mapper.OrderMapper;
 import com.example.demo.service.OrderService;
 import com.example.demo.vo.request.OrderRequestVO;
@@ -36,12 +36,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getOrderByUserId(Integer userId) {
+    public List<Orders> getOrderByUserId(Integer userId) {
         return mapper.getOrderByUserId(userId);
     }
 
     @Override
-    public Integer updateOrderById(Integer userId, Integer flag) {
-        return mapper.updateOrderById(userId, flag);
+    public Integer updateOrderById(Integer id, Integer flag) {
+        return mapper.updateOrderById(id, flag);
     }
 }

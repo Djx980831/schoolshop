@@ -56,4 +56,12 @@
     <select id="isCollection" parameterType="integer" resultType="java.lang.Integer">
         select id from collection where goodsId = #{goodsId} and userId = #{userId}
     </select>
+
+    <select id="getPicPathByGoodsIds" resultType="com.example.demo.entity.Pic">
+        select * from pic
+        where goodsId in
+        <foreach  item="goodsIds" collection="list" index="index"  open="(" separator="," close=")">
+            #{goodsIds}
+        </foreach>
+    </select>
 </mapper>
